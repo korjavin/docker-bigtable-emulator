@@ -9,4 +9,4 @@ RUN gcloud components install bigtable \
 EXPOSE 8086
 
 ENTRYPOINT ["gcloud", "beta", "emulators", "bigtable"]
-CMD ["start", "--host-port", "127.0.0.1:8086"]
+CMD ["start", "--host-port", "0.0.0.0:8086"]
