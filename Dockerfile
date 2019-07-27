@@ -1,12 +1,15 @@
-# Google Cloud Bigtable Documentation
-# https://cloud.google.com/bigtable/docs/
+FROM golang:latest as build
 
-FROM google/cloud-sdk:alpine
+COPY . /emulator
+WORKDIR /emulator
 
-RUN gcloud components install bigtable \
-    && gcloud components install beta
+RUN go build -mod=vendor
+
+FROM debian:testing as production
+
+COPY --from=build /emulator/docker-bigtable-emulator /emulator/docker-bigtable-emulator
 
 EXPOSE 8086
 
-ENTRYPOINT ["gcloud", "beta", "emulators", "bigtable"]
-CMD ["start", "--host-port", "0.0.0.0:8086"]
+ENTRYPOINT ["/emulator/docker-bigtable-emulator"]
+CMD ["--port", "8086"]
